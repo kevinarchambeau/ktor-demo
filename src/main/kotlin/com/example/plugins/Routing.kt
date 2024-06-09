@@ -35,7 +35,17 @@ fun Application.configureRouting() {
         }
         get("/messages") {
             val response = db.allMessages().toString()
-            call.respondText(response)
+            call.respond(HttpStatusCode.OK, response)
+        }
+        get("/message/{id}") {
+            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
+            val response = db.message(id)
+            if (response != null) {
+                call.respond(response.toString())
+            }
+            else {
+                call.respond(HttpStatusCode.NotFound)
+            }
         }
     }
 }
