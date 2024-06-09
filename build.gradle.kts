@@ -1,6 +1,7 @@
 val kotlin_version: String by project
 val logback_version: String by project
 val ktor_version: String by project
+val exposedVersion: String by project
 
 plugins {
     kotlin("jvm") version "2.0.0"
@@ -9,6 +10,12 @@ plugins {
 
 group = "com.example"
 version = "0.0.1"
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 
 application {
     mainClass.set("io.ktor.server.netty.EngineMain")
@@ -31,6 +38,9 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+    implementation("org.xerial:sqlite-jdbc:3.44.1.0")
 }
 
 tasks.test {
