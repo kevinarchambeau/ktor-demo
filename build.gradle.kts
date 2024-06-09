@@ -41,6 +41,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("org.xerial:sqlite-jdbc:3.44.1.0")
+    implementation("com.google.code.gson:gson:2.11.0")
 }
 
 tasks.test {

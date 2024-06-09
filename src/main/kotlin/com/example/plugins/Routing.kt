@@ -1,5 +1,6 @@
 package com.example.plugins
 
+import com.google.gson.Gson
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
@@ -8,9 +9,15 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.jetbrains.exposed.sql.Database
 
+
+object DbSettings {
+    val conn by lazy {
+        Database.connect("jdbc:sqlite:demodb.db", driver = "org.sqlite.JDBC")
+    }
+}
+
 fun Application.configureRouting() {
-    val dbConn = Database.connect("jdbc:sqlite:demodb.db", driver = "org.sqlite.JDBC")
-    val database = DB(dbConn)
+    val db = DB(DbSettings.conn)
     routing {
         staticResources("/content", "content")
         get("/") {
@@ -27,8 +34,7 @@ fun Application.configureRouting() {
             call.respondText(text, type)
         }
         get("/messages") {
-            val response = "tbd"
-            database.test()
+            val response = db.allMessages().toString()
             call.respondText(response)
         }
     }
