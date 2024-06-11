@@ -4,10 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.sun.org.apache.xml.internal.serializer.utils.Utils.messages
 import kotlinx.coroutines.Dispatchers
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -41,7 +38,7 @@ class DB(private val db: Database) {
         }
     }
 
-    suspend fun message(id: Int): String? {
+    suspend fun getMessage(id: Int): String? {
         val builder = GsonBuilder()
         builder.disableHtmlEscaping()
         val gson = builder.create()
@@ -49,6 +46,14 @@ class DB(private val db: Database) {
             message.selectAll().where { message.id eq id }
                 .map {gson.toJson(singleMessage(it[message.id], it[message.message]))}
                 .singleOrNull()
+        }
+    }
+
+    suspend fun updateMessage(id: Int, messageText: String) {
+        dbQuery {
+            message.update({ message.id eq id }) {
+                it[message] = messageText
+            }
         }
     }
 }
