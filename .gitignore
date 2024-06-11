@@ -36,3 +36,5 @@ out/
 .vscode/
 
 .kotlin/
+
+db.db
